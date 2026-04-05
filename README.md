@@ -2,9 +2,9 @@
 
 Библиотека готовых заготовок кода, созданная на Flask.
 
-[![Python](https://shields.io/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
-![Flask](https://shields.io/Flask-2.0+-000000?style=flat&logo=flask&logoColor=white)
-![SQLAlchemy](https://shields.io/SQLAlchemy-ORM-D71F00?style=flat&logo=sqlalchemy&logoColor=white)
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Flask](https://img.shields.io/badge/flask-2.0+-green.svg)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-red.svg)
 
 ## 📖 Описание
 
