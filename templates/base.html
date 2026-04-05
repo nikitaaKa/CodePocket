@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+        <title>CodePocket</title>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    </head>
+    <body>
+        <div class="bg-glow"></div>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <a class="navbar-brand h1 mb-0" href="/">
+                    <img src="/static/img/logo.png" 
+                        alt="Logo" 
+                        style="height: 1.5rem; width: auto;" 
+                        class="d-inline-block align-top"> 
+                    CodePocket
+                </a>
+                <div class="d-flex align-items-center gap-3">
+                    {% if current_user.is_authenticated %}
+                        <a class="btn btn-outline-success btn-sm" href="/add_snippet">Create</a>
+                        <a class="navbar-brand bold text-decoration-none" href="/user/{{ current_user.username }}">
+                            {{ "&#x1F6E0;&#xFE0E; " | safe if current_user.creator else "" }}{{ current_user.username }}
+                        </a>
+                        <a class="btn btn-outline-light btn-sm" href="/logout">Logout</a>
+                    {% else %}
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-outline-light btn-sm" href="/register">Register</a>
+                            <a class="btn btn-primary btn-sm" href="/login">Login</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid px-5 mt-4"> 
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</html>

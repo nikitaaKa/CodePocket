@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="mb-0 font-weight-bold">{{ snippet.title }}</h3>
+                    <div class="ml-auto d-flex flex-row">
+                        <button class="btn btn-outline-light btn-sm" onclick="downloadCodeImage()">
+                            &#x1F4F7;&#xFE0E;
+                        </button>
+                        <button class="btn btn-outline-light btn-sm ml-1" onclick="copyToClipboard('main-code')">
+                            &#x1F4CB;&#xFE0E;
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <pre class="m-0 p-4 text-white" id="main-code" 
+                         style="font-size: 0.95rem; line-height: 1.6; border-radius: 0; min-height: 300px; white-space: pre-wrap;">{{ snippet.content }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card shadow-sm text-center p-3 mb-4">
+                <h6 class="text-muted mb-2">Author</h6>
+                <a href="/user/{{ snippet.user.username }}" style="text-decoration: none; color: inherit;">
+                    <h4 class="mb-1">
+                        {{ "&#x1F6E0;&#xFE0E; " | safe if snippet.user.creator else "" }}{{ snippet.user.username }}
+                        <span style="color: rgb(0, 183, 255);">{{ " ✔" | safe if snippet.user.id == 1 }}</span>
+                    </h4>
+                </a>
+                <hr>
+                <div class="d-flex justify-content-around">
+                    <div>
+                        <small class="text-muted d-block">&#x1F4E4;&#xFE0E; Publications</small>
+                        <strong>{{ snippet.user.publications }}</strong>
+                    </div>
+                </div>
+                
+                {% if current_user.id == snippet.user_id %}
+                    <hr>
+                    <a href="/edit_snippet/{{ snippet.id }}" class="btn btn-sm btn-outline-light btn-block">
+                        &#x270F;&#xFE0E; Edit
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="card shadow-sm text-center">
+                <strong>Lib:</strong> {{ snippet.library.name }}<br>
+                <strong>Topic:</strong> {{ snippet.library.topic.name }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function downloadCodeImage() {
+    const code = document.getElementById('main-code').innerText;
+    const title = "{{ snippet.title }}";
+
+    const base64 = btoa(encodeURIComponent(code).replace(/%([0-9A-F]{2})/g,
+        (match, p1) => String.fromCharCode('0x' + p1)));
+
+    const domain = "https://ray.so/";
+    const anchor = "#code=";
+    const params = "&title=" + encodeURIComponent(title) + "&theme=macintosh&padding=32";
+    
+    const rayUrl = domain + anchor + base64 + params;
+
+    window.open(rayUrl, '_blank');
+}
+</script>
+{% endblock %}

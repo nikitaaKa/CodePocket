@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="card p-3" style="position: sticky; top: 1rem; min-height: 500px;">
+                <h6 class="font-weight-bold">Sort</h6>
+                <select class="form-control mb-3" onchange="location.href='?sort=' + this.value + '&q={{ q }}'">
+                    <option value="new" {{ 'selected' if sort == 'new' }}>Newest</option>
+                    <option value="old" {{ 'selected' if sort == 'old' }}>Oldest</option>
+                </select>
+
+                <h6 class="font-weight-bold">Categories</h6>
+                <div class="list-group list-group-flush" style="font-size: 0.9rem;">
+                    <a href="/" class="font-weight-bold {{ 'text-primary' if not la else 'text-white' }}">All languages</a>
+                    {% for lang in languages %}
+                        <div class="mt-2">
+                            <a href="/index/{{ lang.name }}" class="font-weight-bold {{ 'text-primary' if la == lang.name else 'text-white' }}">{{ lang.name }}</a>
+                            {% if la == lang.name %}
+                                <ul class="pl-3 mt-1" style="list-style: none;">
+                                {% for topic in lang.topics %}
+                                    <li>
+                                        <a href="/index/{{ lang.name }}/{{ topic.name }}" class="{{ 'text-primary' if to == topic.name else 'text-white' }} small">- {{ topic.name }}</a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-auto d-flex flex-column">
+                    <a href="/add_language" class="font-weight-bold">Add language</a>
+                    <a href="/add_topic" class="font-weight-bold">Add topic</a>
+                    <a href="/add_library" class="font-weight-bold">Add library</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div class="mb-4">
+                <div class="card p-3 shadow-sm">
+                    <form action="" method="get" class="input-group">
+                        <input type="hidden" name="sort" value="{{ sort }}">
+                        <input type="text" name="q" class="form-control border rounded" placeholder="Search (example: telegram bot)..." value="{{ q }}">
+                        <div class="input-group-append">
+                            <button class="ml-2 border rounded bg-dark" type="submit">&#x1F50D;&#xFE0E; Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                {% for s in snippets %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100" onclick="location.href='/code/{{ s['id'] }}'" style="cursor: pointer;">
+                        <div class="card-header font-weight-bold">{{ s['title'] }}</div>
+                        <div class="card-body position-relative">
+                            <button class="btn btn-sm position-absolute" 
+                                    style="top: 15px; right: 15px; z-index: 10; box-shadow: none; border-color: transparent" 
+                                    onclick="event.stopPropagation(); copyToClipboard('code-{{ loop.index }}')">
+                                &#x1F4CB;&#xFE0E;
+                            </button>
+
+                            <pre class="m-0 p-2 bg-dark border rounded text-white" id="code-{{ loop.index }}"
+                            style="font-size: 0.85rem; line-height: 1.5;"
+                            data-full-text="{{ s['content'] }}" >{{ "\n".join(s['content'].splitlines()[:4] + ["....."]) }}</pre>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+}
+</script>
+{% endblock %}

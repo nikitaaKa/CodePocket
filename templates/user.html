@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="mb-0 text-center">{{ "&#x1F6E0;&#xFE0E; " | safe if creator else "" }}{{ username }}<span style="color: rgb(0, 183, 255);">{{ " &#10004;" | safe if id == 1 }}</span> <span style="color: grey; scale: 50%;">ID: {{ id }}</span></h2>
+    <h5 class="mb-0 text-center">{{ "&#x1F4E4;&#xFE0E; " | safe }}Publications {{ publications }}</h2>
+    {% if snippets %}
+        <div class="container mt-4">
+            <div class="row">
+                {% for s in snippets %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm" onclick="location.href='/code/{{ s['id'] }}'" style="cursor: pointer;">
+                        <div class="card-header font-weight-bold">{{ s['title'] }}</div>
+                        <div class="card-body position-relative">
+                            <button class="btn btn-sm position-absolute" 
+                                    style="top: 15px; right: 15px; z-index: 10; box-shadow: none; border-color: transparent" 
+                                    onclick="event.stopPropagation(); copyToClipboard('code-{{ i }}')">
+                                &#x1F4CB;&#xFE0E;
+                            </button>
+
+                            <pre class="m-0 p-2 bg-dark border rounded text-white" id="code-{{ i }}" style="font-size: 0.85rem; line-height: 1.5;">{{ "\n".join(s['content'].splitlines()[:4] + ["....."]) }}</pre>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
